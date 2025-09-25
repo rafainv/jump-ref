@@ -34,6 +34,7 @@ jobs:
           URL_X: ${{ secrets.URL_X }}
           TOKEN: ${{ secrets.TOKEN }}
           USER_ID: ${{ secrets.USER_ID }}
+          USER_AGENT: ${{ secrets.USER_AGENT }}
         run: python app.py
         
       - name: Fazer upload da captura de tela
