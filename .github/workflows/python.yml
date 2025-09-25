@@ -31,6 +31,7 @@ jobs:
         env:
           URL_API: ${{ secrets.URL_API }}
           URL_APP: ${{ secrets.URL_APP }}
+          URL_X: ${{ secrets.URL_X }}
           TOKEN: ${{ secrets.TOKEN }}
           USER_ID: ${{ secrets.USER_ID }}
         run: python app.py
