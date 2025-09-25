@@ -1,10 +1,10 @@
 import requests
-# import json
+import json
 import os
 from time import sleep
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 
-# load_dotenv()
+load_dotenv()
 
 url = os.getenv("URL_API")
 url_app = os.getenv("URL_APP")
