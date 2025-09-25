@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: ["main"]
   schedule:
-    - cron: "0 * * * *" # Executa a cada hora
+    - cron: "0 0 * * *" # Executa a cada 24 horas
   workflow_dispatch:
 
 jobs:
