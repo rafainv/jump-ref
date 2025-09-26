@@ -42,7 +42,8 @@ if balance.status_code == 200:
         if claim.json().get("title") is None:
             break
         i += 1
-    sleep(120)
+    sleep(200)
+    print(claim.json())
     print(balance.json()["data"]["total"])
 else:
     print("Erro ao acessar a API")
