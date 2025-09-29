@@ -38,12 +38,13 @@ if balance.status_code == 200:
     while claim.json().get("title") and i < 5:
         sleep(60)
         claim = requests.post(f"{url}/accounting/device-share-rewards", headers=headers, json=data)
-        print(claim.json())
+        ##print(claim.json())
         if claim.json().get("title") is None:
             break
         i += 1
-    sleep(200)
     print(claim.json())
+    sleep(300)
     print(balance.json()["data"]["total"])
 else:
+
     print("Erro ao acessar a API")
