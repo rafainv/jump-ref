@@ -12,14 +12,8 @@ r = session.get(url)
 # Renderiza o JS em modo headless
 # timeout aumenta limite de espera
 # sleep dá um tempo extra para carregar scripts
-r.html.render(timeout=30, sleep=2)
+r.html.render(timeout=20, sleep=2, keep_page=True, scrolldown=3)
+
 
 # Mostra uma prévia do HTML renderizado
-print("Trecho do HTML renderizado:\n", r.html.html[:500])
-
-# Extrai dados dinâmicos
-quotes = r.html.find("span.text")
-authors = r.html.find("small.author")
-
-for q, a in zip(quotes, authors):
-    print(f"{q.text} — {a.text}")
+print("Trecho do HTML renderizado:\n", r.html.html)
