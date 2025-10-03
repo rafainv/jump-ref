@@ -34,6 +34,7 @@ jobs:
           URL_X: ${{ secrets.URL_X }}
           TOKEN: ${{ secrets.TOKEN }}
           USER_ID: ${{ secrets.USER_ID }}
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           USER_AGENT: ${{ secrets.USER_AGENT }}
         run: python app.py
         
