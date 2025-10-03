@@ -7,7 +7,7 @@ from nacl import encoding, public
 URL = os.getenv("URL_API")
 GOOGLE_ID_TOKEN = os.getenv("TOKEN")
 REFRESH_TOKEN = os.getenv("REFRESH_TOKEN")
-GITHUB_PAT = os.getenv("GITHUB_PAT")
+GITHUB_PAT = os.getenv("TOKEN_PAT")
 GITHUB_REPO = os.getenv("GITHUB_REPOSITORY")
 
 HEADERS = {
