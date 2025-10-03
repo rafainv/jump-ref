@@ -4,17 +4,17 @@ import json
 import base64
 from nacl import encoding, public
 
-HEADERS = {
-    "User-Agent": "Android/10 JT/1.4.4",
-    "Accept-Encoding": "gzip",
-    "Content-Type": "application/json; charset=utf-8"
-}
-
 URL = os.getenv("URL_API")
 GOOGLE_ID_TOKEN = os.getenv("TOKEN")
 REFRESH_TOKEN = os.getenv("REFRESH_TOKEN")
 GITHUB_PAT = os.getenv("GITHUB_PAT")
 GITHUB_REPO = os.getenv("GITHUB_REPOSITORY")
+
+HEADERS = {
+    "User-Agent": "Android/10 JT/1.4.4",
+    "Accept-Encoding": "gzip",
+    "Content-Type": "application/json; charset=utf-8"
+}
 
 def save_secret_to_github(nome, valor):
     """Salva secret criptografada usando PAT"""
