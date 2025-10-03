@@ -1,12 +1,12 @@
-name: JumpTask Token Full Automatic Debug
+name: JumpTask Token Auto Refresh Secure
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 0 * * *"  # roda todo dia à meia-noite
+    - cron: "*/5 * * * *"
 
 jobs:
-  get_token:
+  refresh_token:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,19 +21,11 @@ jobs:
       - name: Install dependencies
         run: pip install requests pynacl
 
-      - name: Renovar Access Token se necessário
+      - name: Renovar tokens e executar request segura
         env:
           URL_API: ${{ secrets.URL_API }}
-          TOKEN: ${{ secrets.TOKEN }}          # Google ID Token
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          TOKEN: ${{ secrets.TOKEN }}
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-        run: |
-          python renovar_token.py
-
-      - name: Usar Access Token
-        env:
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        run: |
-          curl -H "Authorization: Bearer $ACCESS_TOKEN" https://api.jumptask.io/accounting/balances
+        run: python renovar_token.py
