@@ -35,4 +35,4 @@ jobs:
       - name: Use Access Token
         run: |
           echo "Access token válido: $ACCESS_TOKEN"
-          curl -H "Authorization: Bearer $ACCESS_TOKEN" https://api.jumptask.io/some_endpoint
+          curl -H "Authorization: Bearer $ACCESS_TOKEN" https://api.jumptask.io/accounting/balances
