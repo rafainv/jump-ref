@@ -80,6 +80,6 @@ if __name__ == "__main__":
     endpoint = f"{URL}/accounting/balances"
     r = requests.get(endpoint, headers={"Authorization": f"Bearer {access_token}"})
     if r.status_code == 200:
-        print("✅ Request realizada com sucesso.")
+        print(r.text)
     else:
         print(f"⚠️ Erro na request: {r.status_code} -> {r.text}")
