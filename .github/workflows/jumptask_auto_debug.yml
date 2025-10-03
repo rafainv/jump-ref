@@ -1,14 +1,13 @@
-name: JumpTask Token Full Automatic Debug
+name: JumpTask Token Prod
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 0 * * *"  # roda todo dia à meia-noite
+    - cron: "*/5 * * * *"  # roda a cada 5 minutos
 
 jobs:
   get_token:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -21,18 +20,22 @@ jobs:
       - name: Install dependencies
         run: pip install requests pynacl
 
-      - name: Get Access Token
-        id: token
+      - name: Get Access Token and Save Secrets
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-          TOKEN: ${{ secrets.TOKEN }}
-          REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}  # opcional, pode estar vazio
-        run: |
-          ACCESS_TOKEN=$(python get_access_token_auto_debug.py | grep 'ACCESS_TOKEN=' | cut -d '=' -f2)
-          echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
+          REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+          GOOGLE_ID_TOKEN: ${{ secrets.GOOGLE_ID_TOKEN }}
+        run: python get_access_token_prod.py
+
+  use_token:
+    needs: get_token
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Use Access Token
         run: |
-          echo "Access token válido: $ACCESS_TOKEN"
-          curl -H "Authorization: Bearer $ACCESS_TOKEN" https://api.jumptask.io/accounting/balances
+          echo "Access token válido: ${{ secrets.ACCESS_TOKEN }}"
+          curl -H "Authorization: Bearer ${{ secrets.ACCESS_TOKEN }}" https://api.jumptask.io/some_endpoint
