@@ -9,7 +9,7 @@ load_dotenv()
 url = os.getenv("URL_API")
 url_app = os.getenv("URL_APP")
 url_x = os.getenv("URL_X")
-token = os.getenv("TOKEN")
+token = os.getenv("ACCESS_TOKEN")
 user_id = os.getenv("USER_ID")
 user_agent = os.getenv("USER_AGENT")
 
@@ -48,3 +48,4 @@ if balance.status_code == 200:
 else:
 
     print("Erro ao acessar a API")
+
