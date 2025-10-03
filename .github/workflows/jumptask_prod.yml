@@ -26,6 +26,6 @@ jobs:
           URL_API: ${{ secrets.URL_API }}
           TOKEN: ${{ secrets.TOKEN }}
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
-          GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
+          GITHUB_PAT: ${{ secrets.TOKEN_PAT }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: python renovar_token.py
