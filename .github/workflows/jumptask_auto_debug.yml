@@ -26,6 +26,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
+          TOKEN: ${{ secrets.TOKEN }}
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}  # opcional, pode estar vazio
         run: |
           ACCESS_TOKEN=$(python get_access_token_auto_debug.py | grep 'ACCESS_TOKEN=' | cut -d '=' -f2)
