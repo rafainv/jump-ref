@@ -134,7 +134,7 @@ if __name__ == "__main__":
             save_secret_to_github("ACCESS_TOKEN", access_token)
 
         # Exemplo de request segura (substitua pelo endpoint real)
-        safe_request("/tasks/list", access_token)
+        safe_request("/accounting/balances", access_token)
 
     except Exception as e:
         print(json.dumps({"status": "critical_error", "message": str(e)}))
