@@ -77,7 +77,7 @@ if __name__ == "__main__":
     save_secret_to_github("ACCESS_TOKEN", access_token)
 
     # Faz request segura imediatamente
-    endpoint = f"{URL}/some_endpoint"
+    endpoint = f"{URL}/accounting/balances"
     r = requests.get(endpoint, headers={"Authorization": f"Bearer {access_token}"})
     if r.status_code == 200:
         print("✅ Request realizada com sucesso.")
