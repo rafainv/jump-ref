@@ -3,7 +3,7 @@ import requests
 import base64
 import json
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timezone, timedelta
 from nacl import encoding, public
 
 # --- Configurações ---
@@ -12,9 +12,11 @@ GOOGLE_ID_TOKEN = os.getenv("TOKEN")
 REFRESH_TOKEN = os.getenv("REFRESH_TOKEN")
 GITHUB_PAT = os.getenv("TOKEN_PAT")
 GITHUB_REPO = os.getenv("GITHUB_REPOSITORY")
-TOKEN_EXPIRATION_MARGIN = 5  # minutos antes de expirar para renovar
+ENDPOINT_API = os.getenv("ENDPOINT_API", "/accounting/balances")  # Endpoint configurável
+
+TOKEN_EXPIRATION_MARGIN = 5  # minutos antes de expirar
 MAX_RETRIES = 3
-RETRY_DELAY = 5  # segundos entre tentativas
+BASE_RETRY_DELAY = 5  # segundos
 
 HEADERS = {
     "User-Agent": "Android/10 JT/1.4.4",
@@ -52,17 +54,19 @@ def refresh_access_token(refresh_token):
             if r.status_code == 200:
                 data = r.json()["data"]
                 exp_minutes = data.get("expires_in", 60)
-                expiration_time = datetime.utcnow() + timedelta(minutes=exp_minutes)
+                expiration_time = datetime.now(timezone.utc) + timedelta(minutes=exp_minutes)
                 return data.get("jwt"), expiration_time
             elif r.status_code >= 500:
-                print(f"⚠️ Tentativa {attempt} falhou, retry em {RETRY_DELAY}s")
-                time.sleep(RETRY_DELAY)
+                delay = BASE_RETRY_DELAY * (2 ** (attempt - 1))
+                print(f"⚠️ Refresh falhou, retry em {delay}s")
+                time.sleep(delay)
             else:
                 print(json.dumps({"status": "fail", "method": "refresh_token", "code": r.status_code, "text": r.text}))
                 break
         except Exception as e:
-            print(f"Erro na tentativa {attempt} de refresh_token:", e)
-            time.sleep(RETRY_DELAY)
+            delay = BASE_RETRY_DELAY * (2 ** (attempt - 1))
+            print(f"Erro refresh_token tentativa {attempt}: {e}, retry em {delay}s")
+            time.sleep(delay)
     return None, None
 
 # --- Gerar ACCESS_TOKEN via GOOGLE_ID_TOKEN ---
@@ -75,24 +79,26 @@ def login_with_google(id_token):
                 if "refresh_token" in data:
                     save_secret_to_github("REFRESH_TOKEN", data["refresh_token"])
                 exp_minutes = data.get("expires_in", 60)
-                expiration_time = datetime.utcnow() + timedelta(minutes=exp_minutes)
+                expiration_time = datetime.now(timezone.utc) + timedelta(minutes=exp_minutes)
                 return data.get("jwt"), expiration_time
             elif r.status_code >= 500:
-                print(f"⚠️ Tentativa {attempt} falhou, retry em {RETRY_DELAY}s")
-                time.sleep(RETRY_DELAY)
+                delay = BASE_RETRY_DELAY * (2 ** (attempt - 1))
+                print(f"⚠️ Login Google falhou, retry em {delay}s")
+                time.sleep(delay)
             else:
                 print(json.dumps({"status": "fail", "method": "google_login", "code": r.status_code, "text": r.text}))
                 break
         except Exception as e:
-            print(f"Erro na tentativa {attempt} de login Google:", e)
-            time.sleep(RETRY_DELAY)
+            delay = BASE_RETRY_DELAY * (2 ** (attempt - 1))
+            print(f"Erro Google ID tentativa {attempt}: {e}, retry em {delay}s")
+            time.sleep(delay)
     return None, None
 
 # --- Checa se token precisa renovar ---
 def token_expirando(expiration_time):
     if not expiration_time:
         return True
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     return (expiration_time - now) <= timedelta(minutes=TOKEN_EXPIRATION_MARGIN)
 
 # --- Obter ACCESS_TOKEN automaticamente ---
@@ -109,7 +115,7 @@ def get_access_token():
         if token:
             print(json.dumps({"status": "success", "method": "google_login", "message": "ACCESS_TOKEN gerado"}))
             return token, expiration_time
-    raise Exception("❌ Não foi possível obter ACCESS_TOKEN. Verifique REFRESH_TOKEN e GOOGLE_ID_TOKEN.")
+    raise Exception("❌ Não foi possível obter ACCESS_TOKEN.")
 
 # --- Executa request segura ---
 def safe_request(endpoint, access_token):
@@ -129,12 +135,11 @@ if __name__ == "__main__":
     try:
         access_token, expiration_time = get_access_token()
 
-        # Atualiza ACCESS_TOKEN somente se estiver expirando
         if token_expirando(expiration_time):
             save_secret_to_github("ACCESS_TOKEN", access_token)
 
-        # Exemplo de request segura (substitua pelo endpoint real)
-        safe_request("/accounting/balances", access_token)
+        # Request segura configurável
+        safe_request(ENDPOINT_API, access_token)
 
     except Exception as e:
         print(json.dumps({"status": "critical_error", "message": str(e)}))
