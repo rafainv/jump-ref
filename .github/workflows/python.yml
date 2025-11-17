@@ -32,7 +32,7 @@ jobs:
           URL_API: ${{ secrets.URL_API }}
           URL_APP: ${{ secrets.URL_APP }}
           URL_X: ${{ secrets.URL_X }}
-          TOKEN: ${{ secrets.TOKENS }}
+          TOKENS: ${{ secrets.TOKENS }}
           USER_ID: ${{ secrets.USER_ID }}
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           USER_AGENT: ${{ secrets.USER_AGENT }}
